@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EB23273A"
+    android:padding="10dp"
+    tools:context=".GameWindow">
+
+
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/round_box"
+        android:backgroundTint="#FBFBFD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="0dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="#C3606CA5"
+        android:backgroundTint="#C3606CA5"
+        android:fontFamily="@font/baloo_bhaina"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="hello AVATAR" />
+
+    <Button
+        android:id="@+id/next"
+        android:layout_width="191dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#606CA6"
+        android:onClick="next"
+        android:text="Next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="369dp"
+        android:layout_height="410dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardBackgroundColor="#00FFFFFF"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/questions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:background="#FC3A515F"
+            android:backgroundTint="#9ABAE1"
+            android:fontFamily="@font/baloo_bhaina"
+            android:gravity="top"
+            android:textAlignment="center"
+            android:textColor="#FCF5FE"
+            android:textSize="20sp"
+            tools:text="QUESTIONS" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            app:chipSpacing="8dp"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/answer1"
+                style="@style/Widget.Material3.Chip.Assist.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:fontFamily="@font/baloo_bhaina"
+                android:textAlignment="center"
+                app:chipBackgroundColor="@color/mix_color"
+                app:chipIconVisible="true"
+                tools:text="answers" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/answer2"
+                style="@style/Widget.Material3.Chip.Assist.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:fontFamily="@font/baloo_bhaina"
+                android:textAlignment="center"
+                app:chipBackgroundColor="@color/mix_color"
+                tools:text="answers" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/answer3"
+                style="@style/Widget.Material3.Chip.Assist.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:fontFamily="@font/baloo_bhaina"
+                android:textAlignment="center"
+                app:chipBackgroundColor="@color/mix_color"
+                tools:text="answers" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/answer4"
+                style="@style/Widget.Material3.Chip.Assist.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:checkable="true"
+                android:fontFamily="@font/baloo_bhaina"
+                android:textAlignment="center"
+                app:chipBackgroundColor="@color/mix_color"
+                tools:text="answers" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="376dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcome">
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="187dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="#4F6887"
+            android:fontFamily="@font/baloo_bhaina"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="#F1F4F6"
+            tools:text="TIMER" />
+
+        <TextView
+            android:id="@+id/countQuestions"
+            android:layout_width="189dp"
+            android:layout_height="60dp"
+            android:background="#4F6887"
+            android:fontFamily="@font/baloo_bhaina"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textColor="#F2F6F6"
+            tools:text="QUESTION 1 OF 7" />
+    </LinearLayout>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spinkit"
+        style="@style/SpinKitView.Small.Circle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:background="#F2F4FA"
+        android:visibility="visible"
+        app:SpinKit_Color="?attr/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
