@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isInvisible
 import androidx.core.widget.doAfterTextChanged
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
@@ -35,23 +36,31 @@ class GameWindow : AppCompatActivity() {
     var name =""
     private val player= Player()
     var media: MediaPlayer? = null
+    lateinit var time:CountDownTimer
 
     val lanucher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     )
     {
         if (it.resultCode == RESULT_OK) {
+            binding.chipGroup.isInvisible = false
             val level = it.data?.getIntExtra("level", -1)
             if (level != null) {
                player.level= level
             }
+            timer()
             score=0
             reset()
             index++
             binding.countQuestions.text = " ${index} / 10"
             getData()
         }
+        else{
+            binding.chipGroup.isInvisible = true
+
+        }
     }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,12 +74,12 @@ class GameWindow : AppCompatActivity() {
             insets
         }
 
-
         val categoryData = intent.getStringArrayExtra("player")
         if (!categoryData.isNullOrEmpty()) {
             name = categoryData[0]
             binding.welcome.text = "Hello $name"
         }
+
         val doubleBounce: Sprite = DoubleBounce()
         binding.spinkit.setIndeterminateDrawable(doubleBounce)
         queue = Volley.newRequestQueue(this)
@@ -90,79 +99,24 @@ class GameWindow : AppCompatActivity() {
         queue.add(request)
         binding.countQuestions.text="${index} / 10"
 
-        object : CountDownTimer(300000, 1000) {
-
-            override fun onTick(millisUntilFinished: Long) {
-
-                binding.timer.text = "${(millisUntilFinished / 60000)%60} : ${(millisUntilFinished / 1000)%60} "
-
-            }
-
-            override fun onFinish() {
-                binding.timer.text="done!"
-            }
-        }.start()
-        binding.timer.doAfterTextChanged {
-            if(it.toString() == "done!")
-            {
-                player.name = name
-                player.score = score
-                val c = Intent(this,Achievement::class.java)
-                c.putExtra("playerData",player)
-                lanucher.launch(c)
-            }
-
-        }
+        timer()
+        chipSelected()
 
 
-        binding.chipGroup.setOnCheckedStateChangeListener {
-          group  , checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                binding.next.isEnabled= true
-                val selectedChipId = checkedIds[0]
-                val selectedChip = group.findViewById<Chip>(selectedChipId)
-                val selectedChipText = selectedChip.text
-                answer = selectedChipText.toString()
-                media= MediaPlayer.create(this,R.raw.clicknote)
-                media?.start()
-            } else {
-                media?.stop()
-                binding.next.isEnabled= false
-            }
-        }
-
-    }
-
-    override fun onDestroy() {
-        queue.stop()
-        media?.stop()
-        super.onDestroy()
     }
 
     fun next(view: View) {
         if(index > 3 && player.level==0)
         {
-            player.name=name
-            player.score=score
-            val c = Intent(this,Achievement::class.java)
-            c.putExtra("playerData",player)
-            lanucher.launch(c)
+            sendData()
         }
         else if (index > 6 && player.level==1)
         {
-            player.name=name
-            player.score=score
-            val c = Intent(this,Achievement::class.java)
-            c.putExtra("playerData",player)
-            lanucher.launch(c)
+            sendData()
         }
         else if (index > 9  && player.level==2)
         {
-            player.name=name
-            player.score=score
-            val c = Intent(this,Achievement::class.java)
-            c.putExtra("playerData",player)
-            lanucher.launch(c)
+            sendData()
         }
         else {
             reset()
@@ -175,12 +129,14 @@ class GameWindow : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        queue.stop()
+        media?.stop()
+        super.onDestroy()
+    }
 
     private fun reset() {
-        binding.answer1.isChecked = false
-        binding.answer2.isChecked = false
-        binding.answer3.isChecked = false
-        binding.answer4.isChecked = false
+        binding.chipGroup.clearCheck()
     }
 
     private fun getData() {
@@ -192,8 +148,64 @@ class GameWindow : AppCompatActivity() {
         binding.answer2.text = modifiedAnswers[1]
         binding.answer3.text = modifiedAnswers[2]
         binding.answer4.text = modifiedAnswers[3]
-//        Log.d("answer",data[index].correctAnswer)
-        Toast.makeText(this, data[index].correctAnswer, Toast.LENGTH_SHORT).show()
+       Log.d("answe","${data[index].correctAnswer}")
+    }
+
+    private fun chipSelected() {
+        binding.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                binding.next.isEnabled = true
+                val selectedChip = group.findViewById<Chip>(checkedIds[0])
+                answer = selectedChip.text.toString()
+                media = MediaPlayer.create(this, R.raw.clicknote)
+                media?.start()
+            } else {
+                media?.stop()
+                binding.next.isEnabled = false
+            }
+        }
+    }
+
+    private fun timer() {
+        time = object : CountDownTimer(60000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+
+                binding.timer.text = "${millisUntilFinished /1000}"
+            }
+
+            override fun onFinish() {
+                binding.timer.text = "done!"
+            }
+        }.start()
+        binding.timer.doAfterTextChanged {
+            if (it.toString() == "done!") {
+                sendData()
+            }
+
+        }
+    }
+
+    private fun sendData() {
+        time.cancel()
+        if(!binding.chipGroup.isInvisible) {
+            if (answer == data[index].correctAnswer) {
+                score++
+                Log.d("score", "$score")
+            }
+            player.name = name
+            player.score = score
+            val c = Intent(this, Achievement::class.java)
+            c.putExtra("playerData", player)
+            lanucher.launch(c)
+        }
+        else
+        {
+            val c = Intent(this, Achievement::class.java)
+            c.putExtra("playerData", player)
+            lanucher.launch(c)
+            Log.d("score", "${player.score }")
+        }
     }
 }
 

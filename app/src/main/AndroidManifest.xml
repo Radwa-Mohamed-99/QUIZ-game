@@ -16,9 +16,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".RankedPlayers"
+            android:exported="false" />
+        <activity
             android:name=".Achievement"
             android:exported="true" />
-
         <activity
             android:name=".GameWindow"
             android:exported="true" />
@@ -34,7 +36,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <meta-data
             android:name="preloaded_fonts"
